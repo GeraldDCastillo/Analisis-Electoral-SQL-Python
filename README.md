@@ -4,6 +4,31 @@ Este proyecto implementa un flujo de trabajo completo de Ingeniería de Datos y 
 
 ---
 
+<h3 align="center">🔹 Visualización Interactiva (Power BI)</h3>
+<p align="center">
+  <img src="img/pbi_principal.png" alt="Dashboard Power BI" width="90%"/>
+  <br>
+  <i>Tablero dinámico con segmentación por zonas geográficas y partidos.</i>
+</p>
+
+<br>
+
+<h3 align="center">🔹 Automatización del Backend</h3>
+<p align="center">
+  <img src="img/codigo_python.png" alt="Script Python" width="45%">
+  &nbsp; &nbsp;
+  <img src="img/reporte_excel.png" alt="Reporte Excel Automatizado" width="45%">
+</p>
+
+<p align="center">
+  <i>
+    <b>Izquierda:</b> Script de Python conectando SQL Server y Pandas.<br>
+    <b>Derecha:</b> Reporte en Excel generado y guardado automáticamente por el script.
+  </i>
+</p>
+
+---
+
 ## 🚀 Tecnologías Utilizadas
 El proyecto integra tres herramientas clave:
 * **SQL Server:** Para el almacenamiento, limpieza y agregación masiva de datos (Vistas y Queries).
@@ -16,32 +41,10 @@ El proyecto integra tres herramientas clave:
 
 | Archivo | Descripción |
 | :--- | :--- |
-| `Script_Base_Datos.sql` | Código SQL para crear tablas, insertar datos y generar la Vista de Regiones (Norte, Sur, Centro). |
-| `Analisis_Regiones2.py` | Script principal de Python. Conecta a SQL, extrae la data y genera el Excel final con gráficas. |
-| `Dashboard_Electoral.pbix` | Tablero interactivo de Power BI con mapas y filtros dinámicos. |
+| `Script_Base_Datos.sql` | Código SQL para crear tablas, insertar datos y generar la Vista de Regiones. |
+| `Analisis_Regiones2.py` | Script principal de Python. Conecta a SQL, extrae data y genera Excel. |
+| `Dashboard_Electoral.pbix` | Tablero interactivo de Power BI. |
 | `Reporte_Electoral_Final.xlsx` | Resultado final del proceso automatizado. |
-
----
-
-## ⚙️ Funcionalidades Clave
-
-### 1. Clasificación Regional (SQL)
-Se implementó una lógica de negocio en SQL para agrupar los estados en zonas económicas:
-* **Norte:** Nuevo León, Sinaloa, etc.
-* **Centro:** CDMX, Puebla, Estado de México.
-* **Sur/Bajío/Occidente:** Resto de entidades.
-
-### 2. Automatización (Python)
-El script de Python ejecuta:
-* Conexión segura mediante `pyodbc`.
-* Extracción de datos de la vista SQL.
-* Cálculo de estadísticas de participación.
-* Exportación automática a reportes de Excel.
-
-### 3. Visualización (Power BI)
-El dashboard permite responder preguntas como:
-* ¿Qué zona geográfica tuvo mayor participación?
-* ¿Cómo se distribuyen los votos por partido en cada región?
 
 ---
 
@@ -51,4 +54,3 @@ El dashboard permite responder preguntas como:
 * Universidad Nacional Politécnica (UNP).
 
 ---
-*Este proyecto es parte de mi portafolio profesional de análisis de datos.*
