@@ -1,0 +1,10 @@
+# Ignorar archivos de sistema
+.idea/
+__pycache__/
+*.pyc
+
+# Ignorar archivos temporales
+~$*.xlsx
+
+# (Opcional) Si tu data es MUY pesada (más de 100MB), descomenta esto:
+# data/
