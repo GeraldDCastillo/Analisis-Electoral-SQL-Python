@@ -6,7 +6,7 @@ Este proyecto implementa un flujo de trabajo completo de Ingeniería de Datos y 
 
 <h3 align="center">🔹 Visualización Interactiva (Power BI)</h3>
 <p align="center">
-  <img src="01_Análisis_Electoral/img/pbi_principal.png" alt="Dashboard Power BI" width="90%"/>
+  <img src="img/pbi_principal.png" alt="Dashboard Power BI" width="90%"/>
   <br>
   <i>Tablero dinámico con segmentación por zonas geográficas y partidos.</i>
 </p>
@@ -15,9 +15,9 @@ Este proyecto implementa un flujo de trabajo completo de Ingeniería de Datos y 
 
 <h3 align="center">🔹 Automatización del Backend</h3>
 <p align="center">
-  <img src="01_Análisis_Electoral/img/codigo_python.png" alt="Script Python" width="45%">
+  <img src="img/codigo_python.png" alt="Script Python" width="45%">
   &nbsp; &nbsp;
-  <img src="01_Análisis_Electoral/img/reporte_excel.png" alt="Reporte Excel Automatizado" width="45%">
+  <img src="img/reporte_excel.png" alt="Reporte Excel Automatizado" width="45%">
 </p>
 
 <p align="center">
