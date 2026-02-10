@@ -1,32 +1,29 @@
 import pandas as pd
-import pyodbc
 import matplotlib.pyplot as plt
-from openpyxl import load_workbook  # <--- NUEVO: El editor de Excel
-from openpyxl.drawing.image import Image  # <--- NUEVO: El pegamento de imágenes
+import pyodbc
+from openpyxl import load_workbook
+from openpyxl.drawing.image import Image
+import os
 
-# ---------------------------------------------------------
-# BLOQUE 1: CONEXIÓN (Igual que siempre)
-# ---------------------------------------------------------
-print("🔌 Conectando a SQL Server...")
-server = 'LAPTOP-MSNVOJJO'
-database = 'CursoSQL'
+# --- 1. CONFIGURATION & SETUP ---
+SERVER = '.'
+DATABASE = 'CursoSQL'
 
-conn_str = (
-    f'DRIVER={{ODBC Driver 17 for SQL Server}};'
-    f'SERVER={server};'
-    f'DATABASE={database};'
-    f'Trusted_Connection=yes;'
-)
+EXCEL_FILE = '../data/Reporte_Electoral_Final.xlsx'
+IMAGE_FILE = '../img/chart_temp.png'
+
+print("🔌 Connecting to SQL Server...")
 
 try:
-    conexion = pyodbc.connect(conn_str)
+    # Secure connection
+    connection_string = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={SERVER};DATABASE={DATABASE};Trusted_Connection=yes;TrustServerCertificate=yes;'
 
-    # ---------------------------------------------------------
-    # BLOQUE 2: EXTRAER DATOS (Tu JOIN ganador)
-    # ---------------------------------------------------------
+    conn = pyodbc.connect(connection_string)
+
+    # --- LOGIC RESTORED: COMPLEX JOIN QUERY ---
+    # We join 'votos' with 'Regiones' to aggregate by Zone instead of State
     query = """
-            SELECT R.Zona, \
-                   SUM(V.Votos) AS Total_Votos
+            SELECT R.Zona, SUM(V.Votos) AS Total_Votos
             FROM dbo.votos AS V
                      INNER JOIN dbo.Regiones AS R
                                 ON V.ENTIDAD = R.Estado
@@ -34,58 +31,62 @@ try:
             ORDER BY Total_Votos DESC \
             """
 
-    df_zonas = pd.read_sql(query, conexion)
+    df = pd.read_sql(query, conn)
+    conn.close()
 
-    # ---------------------------------------------------------
-    # BLOQUE 3: CREAR EL EXCEL BÁSICO
-    # ---------------------------------------------------------
-    nombre_excel = "../data/Reporte_Electoral_Final.xlsx"
-    print(f"💾 Creando archivo: {nombre_excel}...")
-    df_zonas.to_excel(nombre_excel, index=False)
-
-    # ---------------------------------------------------------
-    # BLOQUE 4: GENERAR Y GUARDAR LA GRÁFICA (LA FOTO)
-    # ---------------------------------------------------------
-    print("🎨 Pintando y guardando la gráfica...")
-    plt.figure(figsize=(10, 6))
-
-    barras = plt.bar(df_zonas['Zona'], df_zonas['Total_Votos'], color='orange')
-    plt.title('Votos Totales por Región')
-    plt.xlabel('Región')
-    plt.ylabel('Votos (Millones)')
-    plt.ticklabel_format(style='plain', axis='y')
-    plt.bar_label(barras, fmt='%d')
-
-    # TRUCO: Guardamos la gráfica como imagen antes de mostrarla
-    nombre_imagen = "grafica_temporal.png"
-    plt.savefig(nombre_imagen, bbox_inches='tight')
-    print("📸 ¡Foto de la gráfica tomada!")
-
-    # ---------------------------------------------------------
-    # BLOQUE 5: EL PEGAMENTO MÁGICO (Insertar imagen en Excel)
-    # ---------------------------------------------------------
-    print("📎 Insertando la gráfica dentro del Excel...")
-
-    # 1. Abrimos el Excel que acabamos de crear
-    libro = load_workbook(nombre_excel)
-    hoja = libro.active  # Seleccionamos la primera hoja
-
-    # 2. Preparamos la imagen
-    img = Image(nombre_imagen)
-
-    # 3. La pegamos en la celda D2 (al lado de la tabla)
-    hoja.add_image(img, 'D2')
-
-    # 4. Guardamos los cambios
-    libro.save(nombre_excel)
-
-    print("\n" + "=" * 40)
-    print(f"🚀 ¡LISTO! Abre el archivo '{nombre_excel}'")
-    print("   Verás los datos Y la gráfica adentro.")
-    print("=" * 40)
-
-    # Opcional: Mostrarla también en PyCharm
-    plt.show()
+    print("✅ Data extracted successfully (By Region).")
+    print(df.head())
 
 except Exception as e:
-    print("❌ Error:", e)
+    print(f"❌ CRITICAL ERROR: Database connection failed. {e}")
+    exit()
+
+# --- 2. DATA PROCESSING (Pandas) ---
+print("⚙️ Processing data...")
+
+# Note: The SQL Query already grouped the data, so we don't need to groupby here.
+# We just save the result.
+report = df
+
+# Export to Excel
+report.to_excel(EXCEL_FILE, index=False)
+print(f"📄 Excel created at: {EXCEL_FILE}")
+
+# --- 3. DATA VISUALIZATION (Matplotlib) ---
+print("📊 Generating business charts...")
+
+plt.figure(figsize=(10, 6))
+colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd']
+
+# Now we plot 'Zona' vs 'Total_Votos' (The original requirement)
+plt.bar(report['Zona'], report['Total_Votos'], color=colors)
+
+plt.title('Total Votes by Region (Generated via Python)')
+plt.xlabel('Region')
+plt.ylabel('Votes (Millions)')
+plt.ticklabel_format(style='plain', axis='y')
+plt.xticks(rotation=45)
+
+plt.savefig(IMAGE_FILE, bbox_inches='tight')
+print(f"📸 Chart saved at: {IMAGE_FILE}")
+
+# --- 4. REPORT GENERATION (OpenPyXL) ---
+print("📎 Integrating chart into final Excel report...")
+
+try:
+    wb = load_workbook(EXCEL_FILE)
+    ws = wb.active
+
+    img = Image(IMAGE_FILE)
+    ws.add_image(img, 'D2')
+
+    wb.save(EXCEL_FILE)
+
+    print("=" * 50)
+    print(f"🚀 SUCCESS! Full Pipeline finished.")
+    print(f"📂 Output: {EXCEL_FILE}")
+    print("=" * 50)
+
+except Exception as e:
+    print(f"❌ Error during Excel integration: {e}")
+    print("⚠️ HINT: Close the Excel file if it is open!")
