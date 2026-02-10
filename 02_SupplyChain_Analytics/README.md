@@ -24,7 +24,11 @@ Una vista clara de los costos operativos y el volumen de carga por ruta.
 
 ### 2. Accesibilidad Total: Vista Móvil
 Diseñado para que los gerentes tomen decisiones desde cualquier lugar.
-![Vista Móvil](img/04_PowerBI_Mobile.png)
+<p align="center">
+  <img src="img/04_PowerBI_Mobile.png" alt="Vista Móvil" width="400">
+  <br>
+  <em> </em>
+</p>
 
 ### 3. El Motor en la Nube: Databricks (Spark SQL)
 Procesamiento masivo y limpieza de datos utilizando notebooks en la nube.
