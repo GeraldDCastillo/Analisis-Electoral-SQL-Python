@@ -39,7 +39,7 @@ try:
     # ---------------------------------------------------------
     # BLOQUE 3: CREAR EL EXCEL BÁSICO
     # ---------------------------------------------------------
-    nombre_excel = "Reporte_Zonas_Con_Grafica.xlsx"
+    nombre_excel = "../data/Reporte_Electoral_Final.xlsx"
     print(f"💾 Creando archivo: {nombre_excel}...")
     df_zonas.to_excel(nombre_excel, index=False)
 
